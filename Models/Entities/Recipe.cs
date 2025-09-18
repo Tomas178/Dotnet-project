@@ -14,7 +14,7 @@ namespace Project.Models.Entities
         public string Title { get; set; } = string.Empty;
 
         [Column("steps")]
-        public List<string> Steps { get; set; } = [];
+        public string Steps { get; set; } = string.Empty;
 
         [Column("duration")]
         public int Duration { get; set; }
