@@ -14,6 +14,9 @@ public class UsersEntity
     [Column("email")]
     public string Email { get; set; } = string.Empty;
 
+    [Column("password")]
+    public string Password { get; set; } = string.Empty;
+
     [Column("created_at")]
     public DateTime CreatedAt { get; set; }
 
