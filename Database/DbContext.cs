@@ -6,7 +6,7 @@ using Project.Models.Entities;
 public class ProjectDbContext(DbContextOptions<ProjectDbContext> options) : DbContext(options)
 {
     public DbSet<UsersEntity> Users { get; set; }
-    public DbSet<RecipeEntity> Recipes { get; set; }
+    public DbSet<RecipesEntity> Recipes { get; set; }
     public DbSet<SavedRecipesEntity> SavedRecipes { get; set; }
     public DbSet<ToolsEntity> Tools { get; set; }
     public DbSet<RecipesToolsEntity> RecipesTools { get; set; }
@@ -15,7 +15,7 @@ public class ProjectDbContext(DbContextOptions<ProjectDbContext> options) : DbCo
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
-        modelBuilder.Entity<RecipeEntity>()
+        modelBuilder.Entity<RecipesEntity>()
             .HasOne(r => r.User)
             .WithMany(u => u.Recipes)
             .HasForeignKey(r => r.UserId)

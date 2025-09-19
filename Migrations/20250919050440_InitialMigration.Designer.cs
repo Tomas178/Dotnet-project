@@ -12,7 +12,7 @@ using Project.Database;
 namespace Project.Migrations
 {
     [DbContext(typeof(ProjectDbContext))]
-    [Migration("20250918110954_InitialMigration")]
+    [Migration("20250919050440_InitialMigration")]
     partial class InitialMigration
     {
         /// <inheritdoc />
@@ -48,7 +48,7 @@ namespace Project.Migrations
                     b.ToTable("Ingredients");
                 });
 
-            modelBuilder.Entity("Project.Models.Entities.RecipeEntity", b =>
+            modelBuilder.Entity("Project.Models.Entities.RecipesEntity", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -201,7 +201,7 @@ namespace Project.Migrations
                     b.ToTable("Users");
                 });
 
-            modelBuilder.Entity("Project.Models.Entities.RecipeEntity", b =>
+            modelBuilder.Entity("Project.Models.Entities.RecipesEntity", b =>
                 {
                     b.HasOne("Project.Models.Entities.UsersEntity", "User")
                         .WithMany("Recipes")
@@ -214,7 +214,7 @@ namespace Project.Migrations
 
             modelBuilder.Entity("Project.Models.Entities.SavedRecipesEntity", b =>
                 {
-                    b.HasOne("Project.Models.Entities.RecipeEntity", "Recipe")
+                    b.HasOne("Project.Models.Entities.RecipesEntity", "Recipe")
                         .WithMany()
                         .HasForeignKey("RecipeId")
                         .OnDelete(DeleteBehavior.Cascade)

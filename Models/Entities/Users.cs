@@ -23,5 +23,5 @@ public class UsersEntity
     [Column("updated_at")]
     public DateTime UpdatedAt { get; set; }
 
-    public ICollection<RecipeEntity> Recipes { get; set; } = [];
+    public ICollection<RecipesEntity> Recipes { get; set; } = [];
 }

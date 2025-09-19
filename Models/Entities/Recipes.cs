@@ -3,7 +3,7 @@ namespace Project.Models.Entities;
 
 using System.ComponentModel.DataAnnotations.Schema;
 
-public class RecipeEntity
+public class RecipesEntity
 {
     [Column("id")]
     public int Id { get; set; }
