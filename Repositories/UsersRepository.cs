@@ -15,9 +15,7 @@ public class UsersRepository(ProjectDbContext dbContext) : IUsersRepository
     {
         try
         {
-            var users = await this.dbContext.Users
-                .Include(u => u.Email)
-                .ToListAsync();
+            var users = await this.dbContext.Users.ToListAsync();
 
             return Result.Ok(users);
         }
