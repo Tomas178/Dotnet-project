@@ -89,15 +89,22 @@ public class UsersRepository(ProjectDbContext dbContext) : IUsersRepository
 
     public async Task<Result> DeleteUserAsync(int id)
     {
-        var user = await this.dbContext.Users.FindAsync(id);
-        if (user is null)
+        try
         {
-            return Result.Fail<UsersEntity>($"User with id: {id} not found");
+            var user = await this.dbContext.Users.FindAsync(id);
+            if (user is null)
+            {
+                return Result.Fail<UsersEntity>($"User with id: {id} not found");
+            }
+
+            this.dbContext.Users.Remove(user);
+            await this.dbContext.SaveChangesAsync();
+
+            return Result.Ok();
         }
-
-        this.dbContext.Users.Remove(user);
-        await this.dbContext.SaveChangesAsync();
-
-        return Result.Ok();
+        catch (Exception ex)
+        {
+            return Result.Fail<UsersEntity>($"Failed to delete user: {ex.Message}");
+        }
     }
 }
