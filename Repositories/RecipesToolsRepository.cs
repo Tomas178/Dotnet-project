@@ -5,7 +5,7 @@ using Project.Repositories.Interfaces;
 using Project.Models.Core;
 using Project.Models.Entities;
 
-public class RecipesToolsRepositry(ProjectDbContext dbContext) : IRecipesToolsRepository
+public class RecipesToolsRepository(ProjectDbContext dbContext) : IRecipesToolsRepository
 {
     private readonly ProjectDbContext dbContext = dbContext;
 
