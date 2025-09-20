@@ -96,7 +96,7 @@ public class RecipesRepository(ProjectDbContext dbContext) : IRecipesRepository
             var recipe = await this.dbContext.Recipes.FindAsync(id);
             if (recipe is null)
             {
-                return Result.Fail<RecipesEntity>($"Recipe with id: {id} not found");
+                return Result.Fail($"Recipe with id: {id} not found");
             }
 
             this.dbContext.Remove(recipe);
@@ -106,7 +106,7 @@ public class RecipesRepository(ProjectDbContext dbContext) : IRecipesRepository
         }
         catch (Exception ex)
         {
-            return Result.Fail<RecipesEntity>($"Failed to delete recipe {ex.Message}");
+            return Result.Fail($"Failed to delete recipe {ex.Message}");
         }
 
     }

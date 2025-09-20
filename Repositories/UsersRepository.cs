@@ -92,7 +92,7 @@ public class UsersRepository(ProjectDbContext dbContext) : IUsersRepository
             var user = await this.dbContext.Users.FindAsync(id);
             if (user is null)
             {
-                return Result.Fail<UsersEntity>($"User with id: {id} not found");
+                return Result.Fail($"User with id: {id} not found");
             }
 
             this.dbContext.Users.Remove(user);
@@ -102,7 +102,7 @@ public class UsersRepository(ProjectDbContext dbContext) : IUsersRepository
         }
         catch (Exception ex)
         {
-            return Result.Fail<UsersEntity>($"Failed to delete user: {ex.Message}");
+            return Result.Fail($"Failed to delete user: {ex.Message}");
         }
     }
 }
