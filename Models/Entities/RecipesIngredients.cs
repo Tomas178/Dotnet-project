@@ -2,7 +2,7 @@ namespace Project.Models.Entities;
 
 using System.ComponentModel.DataAnnotations.Schema;
 
-public class RecipesIngredientsEntity
+public class RecipesIngredientsEntity : BaseTimestamps
 {
     [Column("recipe_id")]
     public int RecipeId { get; set; }

@@ -3,7 +3,7 @@ namespace Project.Models.Entities;
 
 using System.ComponentModel.DataAnnotations.Schema;
 
-public class RecipesEntity
+public class RecipesEntity : BaseTimestamps
 {
     [Column("id")]
     public int Id { get; set; }
@@ -20,10 +20,4 @@ public class RecipesEntity
 
     [Column("duration")]
     public int Duration { get; set; }
-
-    [Column("created_at")]
-    public DateTime CreatedAt { get; set; }
-
-    [Column("updated_at")]
-    public DateTime UpdatedAt { get; set; }
 }

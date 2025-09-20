@@ -3,7 +3,7 @@ namespace Project.Models.Entities;
 
 using System.ComponentModel.DataAnnotations.Schema;
 
-public class SavedRecipesEntity
+public class SavedRecipesEntity : BaseCreatedTimestamp
 {
 
     [Column("recipe_id")]
@@ -13,7 +13,4 @@ public class SavedRecipesEntity
     [Column("user_id")]
     public int UserId { get; set; }
     public UsersEntity User { get; set; } = null!;
-
-    [Column("created_at")]
-    public DateTime CreatedAt { get; set; }
 }

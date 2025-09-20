@@ -12,8 +12,8 @@ using Project.Database;
 namespace Project.Migrations
 {
     [DbContext(typeof(ProjectDbContext))]
-    [Migration("20250919050440_InitialMigration")]
-    partial class InitialMigration
+    [Migration("20250920094311_InitialMigrate")]
+    partial class InitialMigrate
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -100,6 +100,14 @@ namespace Project.Migrations
                         .HasColumnType("integer")
                         .HasColumnName("ingredient_id");
 
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("created_at");
+
+                    b.Property<DateTime>("UpdatedAt")
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("updated_at");
+
                     b.HasKey("RecipeId", "IngredientId");
 
                     b.ToTable("RecipesIngredients");
@@ -114,6 +122,14 @@ namespace Project.Migrations
                     b.Property<int>("ToolId")
                         .HasColumnType("integer")
                         .HasColumnName("tool_id");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("created_at");
+
+                    b.Property<DateTime>("UpdatedAt")
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("updated_at");
 
                     b.HasKey("RecipeId", "ToolId");
 

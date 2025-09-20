@@ -7,7 +7,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace Project.Migrations
 {
     /// <inheritdoc />
-    public partial class InitialMigration : Migration
+    public partial class InitialMigrate : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -31,7 +31,9 @@ namespace Project.Migrations
                 columns: table => new
                 {
                     recipe_id = table.Column<int>(type: "integer", nullable: false),
-                    ingredient_id = table.Column<int>(type: "integer", nullable: false)
+                    ingredient_id = table.Column<int>(type: "integer", nullable: false),
+                    created_at = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
+                    updated_at = table.Column<DateTime>(type: "timestamp with time zone", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -43,7 +45,9 @@ namespace Project.Migrations
                 columns: table => new
                 {
                     recipe_id = table.Column<int>(type: "integer", nullable: false),
-                    tool_id = table.Column<int>(type: "integer", nullable: false)
+                    tool_id = table.Column<int>(type: "integer", nullable: false),
+                    created_at = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
+                    updated_at = table.Column<DateTime>(type: "timestamp with time zone", nullable: false)
                 },
                 constraints: table =>
                 {
