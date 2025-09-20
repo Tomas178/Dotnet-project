@@ -3,6 +3,7 @@ namespace Project.Models.Entities;
 
 using System.ComponentModel.DataAnnotations.Schema;
 
+[Table("tools")]
 public class ToolsEntity : BaseCreatedTimestamp
 {
     [Column("id")]

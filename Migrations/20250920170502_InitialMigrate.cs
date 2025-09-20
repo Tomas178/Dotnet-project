@@ -7,13 +7,13 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace Project.Migrations
 {
     /// <inheritdoc />
-    public partial class InitialMigration : Migration
+    public partial class InitialMigrate : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.CreateTable(
-                name: "Ingredients",
+                name: "ingredients",
                 columns: table => new
                 {
                     id = table.Column<int>(type: "integer", nullable: false)
@@ -23,11 +23,11 @@ namespace Project.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Ingredients", x => x.id);
+                    table.PrimaryKey("PK_ingredients", x => x.id);
                 });
 
             migrationBuilder.CreateTable(
-                name: "RecipesIngredients",
+                name: "recipes_ingredients",
                 columns: table => new
                 {
                     recipe_id = table.Column<int>(type: "integer", nullable: false),
@@ -37,11 +37,11 @@ namespace Project.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_RecipesIngredients", x => new { x.recipe_id, x.ingredient_id });
+                    table.PrimaryKey("PK_recipes_ingredients", x => new { x.recipe_id, x.ingredient_id });
                 });
 
             migrationBuilder.CreateTable(
-                name: "RecipesTools",
+                name: "recipes_tools",
                 columns: table => new
                 {
                     recipe_id = table.Column<int>(type: "integer", nullable: false),
@@ -51,11 +51,11 @@ namespace Project.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_RecipesTools", x => new { x.recipe_id, x.tool_id });
+                    table.PrimaryKey("PK_recipes_tools", x => new { x.recipe_id, x.tool_id });
                 });
 
             migrationBuilder.CreateTable(
-                name: "Tools",
+                name: "tools",
                 columns: table => new
                 {
                     id = table.Column<int>(type: "integer", nullable: false)
@@ -65,11 +65,11 @@ namespace Project.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Tools", x => x.id);
+                    table.PrimaryKey("PK_tools", x => x.id);
                 });
 
             migrationBuilder.CreateTable(
-                name: "Users",
+                name: "users",
                 columns: table => new
                 {
                     id = table.Column<int>(type: "integer", nullable: false)
@@ -82,11 +82,11 @@ namespace Project.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Users", x => x.id);
+                    table.PrimaryKey("PK_users", x => x.id);
                 });
 
             migrationBuilder.CreateTable(
-                name: "Recipes",
+                name: "recipes",
                 columns: table => new
                 {
                     id = table.Column<int>(type: "integer", nullable: false)
@@ -100,17 +100,17 @@ namespace Project.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Recipes", x => x.id);
+                    table.PrimaryKey("PK_recipes", x => x.id);
                     table.ForeignKey(
-                        name: "FK_Recipes_Users_user_id",
+                        name: "FK_recipes_users_user_id",
                         column: x => x.user_id,
-                        principalTable: "Users",
+                        principalTable: "users",
                         principalColumn: "id",
                         onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
-                name: "SavedRecipes",
+                name: "saved_recipes",
                 columns: table => new
                 {
                     recipe_id = table.Column<int>(type: "integer", nullable: false),
@@ -119,29 +119,29 @@ namespace Project.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_SavedRecipes", x => new { x.user_id, x.recipe_id });
+                    table.PrimaryKey("PK_saved_recipes", x => new { x.user_id, x.recipe_id });
                     table.ForeignKey(
-                        name: "FK_SavedRecipes_Recipes_recipe_id",
+                        name: "FK_saved_recipes_recipes_recipe_id",
                         column: x => x.recipe_id,
-                        principalTable: "Recipes",
+                        principalTable: "recipes",
                         principalColumn: "id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_SavedRecipes_Users_user_id",
+                        name: "FK_saved_recipes_users_user_id",
                         column: x => x.user_id,
-                        principalTable: "Users",
+                        principalTable: "users",
                         principalColumn: "id",
                         onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateIndex(
-                name: "IX_Recipes_user_id",
-                table: "Recipes",
+                name: "IX_recipes_user_id",
+                table: "recipes",
                 column: "user_id");
 
             migrationBuilder.CreateIndex(
-                name: "IX_SavedRecipes_recipe_id",
-                table: "SavedRecipes",
+                name: "IX_saved_recipes_recipe_id",
+                table: "saved_recipes",
                 column: "recipe_id");
         }
 
@@ -149,25 +149,25 @@ namespace Project.Migrations
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
-                name: "Ingredients");
+                name: "ingredients");
 
             migrationBuilder.DropTable(
-                name: "RecipesIngredients");
+                name: "recipes_ingredients");
 
             migrationBuilder.DropTable(
-                name: "RecipesTools");
+                name: "recipes_tools");
 
             migrationBuilder.DropTable(
-                name: "SavedRecipes");
+                name: "saved_recipes");
 
             migrationBuilder.DropTable(
-                name: "Tools");
+                name: "tools");
 
             migrationBuilder.DropTable(
-                name: "Recipes");
+                name: "recipes");
 
             migrationBuilder.DropTable(
-                name: "Users");
+                name: "users");
         }
     }
 }

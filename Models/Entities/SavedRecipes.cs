@@ -3,6 +3,7 @@ namespace Project.Models.Entities;
 
 using System.ComponentModel.DataAnnotations.Schema;
 
+[Table("saved_recipes")]
 public class SavedRecipesEntity : BaseCreatedTimestamp
 {
 

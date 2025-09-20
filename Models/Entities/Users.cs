@@ -3,6 +3,7 @@ namespace Project.Models.Entities;
 
 using System.ComponentModel.DataAnnotations.Schema;
 
+[Table("users")]
 public class UsersEntity : BaseTimestamps
 {
     [Column("id")]

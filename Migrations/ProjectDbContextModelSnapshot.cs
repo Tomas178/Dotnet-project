@@ -42,7 +42,7 @@ namespace Project.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Ingredients");
+                    b.ToTable("ingredients");
                 });
 
             modelBuilder.Entity("Project.Models.Entities.RecipesEntity", b =>
@@ -84,7 +84,7 @@ namespace Project.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("Recipes");
+                    b.ToTable("recipes");
                 });
 
             modelBuilder.Entity("Project.Models.Entities.RecipesIngredientsEntity", b =>
@@ -107,7 +107,7 @@ namespace Project.Migrations
 
                     b.HasKey("RecipeId", "IngredientId");
 
-                    b.ToTable("RecipesIngredients");
+                    b.ToTable("recipes_ingredients");
                 });
 
             modelBuilder.Entity("Project.Models.Entities.RecipesToolsEntity", b =>
@@ -130,7 +130,7 @@ namespace Project.Migrations
 
                     b.HasKey("RecipeId", "ToolId");
 
-                    b.ToTable("RecipesTools");
+                    b.ToTable("recipes_tools");
                 });
 
             modelBuilder.Entity("Project.Models.Entities.SavedRecipesEntity", b =>
@@ -151,7 +151,7 @@ namespace Project.Migrations
 
                     b.HasIndex("RecipeId");
 
-                    b.ToTable("SavedRecipes");
+                    b.ToTable("saved_recipes");
                 });
 
             modelBuilder.Entity("Project.Models.Entities.ToolsEntity", b =>
@@ -174,7 +174,7 @@ namespace Project.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Tools");
+                    b.ToTable("tools");
                 });
 
             modelBuilder.Entity("Project.Models.Entities.UsersEntity", b =>
@@ -211,7 +211,7 @@ namespace Project.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Users");
+                    b.ToTable("users");
                 });
 
             modelBuilder.Entity("Project.Models.Entities.RecipesEntity", b =>
