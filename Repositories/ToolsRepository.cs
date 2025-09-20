@@ -50,7 +50,7 @@ public class ToolsRepository(ProjectDbContext dbContext) : IToolsRepository
             var tools = await this.dbContext.Tools.Where(t => names.Contains(t.Name)).ToListAsync();
             if (tools is null)
             {
-                return Result.Fail<List<ToolsEntity>>("Recipes with given names have not been found");
+                return Result.Fail<List<ToolsEntity>>("Tools with given names have not been found");
             }
 
             return Result.Ok(tools);
