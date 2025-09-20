@@ -83,7 +83,7 @@ public class UsersRepository(ProjectDbContext dbContext) : IUsersRepository
         }
         catch (Exception ex)
         {
-            return Result.Fail<UsersEntity>($"Failed to update used: {ex.Message}");
+            return Result.Fail<UsersEntity>($"Failed to update user: {ex.Message}");
         }
     }
 
