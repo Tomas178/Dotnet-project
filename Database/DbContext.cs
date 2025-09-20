@@ -13,6 +13,41 @@ public class ProjectDbContext(DbContextOptions<ProjectDbContext> options) : DbCo
     public DbSet<IngredientsEntity> Ingredients { get; set; }
     public DbSet<RecipesIngredientsEntity> RecipesIngredients { get; set; }
 
+    public override Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)
+    {
+        this.AddTimestamps();
+        return base.SaveChangesAsync(cancellationToken);
+    }
+
+    private void AddTimestamps()
+    {
+        var now = DateTime.UtcNow;
+
+        var timestampedEntities = this.ChangeTracker.Entries()
+            .Where(et => et.Entity is BaseTimestamps &&
+                (et.State == EntityState.Added || et.State == EntityState.Modified));
+
+        foreach (var entry in timestampedEntities)
+        {
+            var entity = (BaseTimestamps)entry.Entity;
+
+            if (entry.State == EntityState.Added)
+            {
+                entity.CreatedAt = now;
+            }
+
+            entity.UpdatedAt = now;
+        }
+
+        var createdOnlyEntities = this.ChangeTracker.Entries()
+            .Where(x => x.Entity is BaseCreatedTimestamp && x.State == EntityState.Added);
+
+        foreach (var entry in createdOnlyEntities)
+        {
+            ((BaseCreatedTimestamp)entry.Entity).CreatedAt = now;
+        }
+    }
+
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         modelBuilder.Entity<RecipesEntity>()
