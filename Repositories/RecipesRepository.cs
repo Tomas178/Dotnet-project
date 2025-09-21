@@ -14,16 +14,11 @@ public class RecipesRepository(ProjectDbContext dbContext) : IRecipesRepository
     {
         try
         {
-            if (pagination.Offset <= 0 || pagination.Limit <= 0)
-            {
-                return Result.Fail<List<RecipesEntity>>("Pagination offset and limit should be greater than zero");
-            }
-
             var recipes = await this.dbContext.Recipes
-                .OrderBy(r => r.Id)
-                .Skip(pagination.Offset * pagination.Limit)
-                .Take(pagination.Limit)
-                .ToListAsync();
+            .OrderBy(r => r.Id)
+            .Skip(pagination.Offset * pagination.Limit)
+            .Take(pagination.Limit)
+            .ToListAsync();
 
             return Result.Ok(recipes);
         }
