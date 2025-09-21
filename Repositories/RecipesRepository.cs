@@ -89,7 +89,7 @@ public class RecipesRepository(ProjectDbContext dbContext) : IRecipesRepository
         }
     }
 
-    public async Task<Result> DeleteRecipesAsync(int id)
+    public async Task<Result> DeleteRecipeAsync(int id)
     {
         try
         {

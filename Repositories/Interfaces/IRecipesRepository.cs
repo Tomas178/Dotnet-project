@@ -9,5 +9,5 @@ public interface IRecipesRepository
     public Task<Result<RecipesEntity>> GetRecipeByIdAsync(int id);
     public Task<Result<RecipesEntity>> CreateRecipeAsync(RecipesEntity recipe);
     public Task<Result<RecipesEntity>> UpdateRecipeAsync(RecipesEntity recipe);
-    public Task<Result> DeleteRecipesAsync(int id);
+    public Task<Result> DeleteRecipeAsync(int id);
 }
