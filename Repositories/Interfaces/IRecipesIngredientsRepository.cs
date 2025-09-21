@@ -5,5 +5,5 @@ using Project.Models.Entities;
 
 public interface IRecipesIngredientsRepository
 {
-    public Task<Result<List<RecipesIngredientsEntity>>> CreatedRecipesIngredientsLinkAsync(List<RecipesIngredientsEntity> links);
+    public Task<Result<List<RecipesIngredientsEntity>>> CreateRecipesIngredientsLinksAsync(List<RecipesIngredientsEntity> links);
 }

@@ -9,7 +9,7 @@ public class RecipesIngredientsRepository(ProjectDbContext dbContext) : IRecipes
 {
     private readonly ProjectDbContext dbContext = dbContext;
 
-    public async Task<Result<List<RecipesIngredientsEntity>>> CreatedRecipesIngredientsLinkAsync(List<RecipesIngredientsEntity> links)
+    public async Task<Result<List<RecipesIngredientsEntity>>> CreateRecipesIngredientsLinksAsync(List<RecipesIngredientsEntity> links)
     {
         try
         {
