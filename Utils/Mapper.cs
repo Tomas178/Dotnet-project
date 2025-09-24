@@ -41,4 +41,9 @@ public static class Mapper
                 : null
         };
     }
+
+    public static ICollection<UsersResponseDto> MapToResponseDto(IEnumerable<UsersEntity> users, bool includeRecipes = false)
+    {
+        return [.. users.Select(user => MapToResponseDto(user, includeRecipes))];
+    }
 }
