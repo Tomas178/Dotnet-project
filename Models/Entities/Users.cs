@@ -18,5 +18,6 @@ public class UsersEntity : BaseTimestamps
     [Column("password")]
     public string Password { get; set; } = string.Empty;
 
-    public ICollection<RecipesEntity> Recipes { get; set; } = [];
+    public ICollection<RecipesEntity> CreatedRecipes { get; set; } = [];
+    public ICollection<RecipesEntity> SavedRecipes { get; set; } = [];
 }
