@@ -6,6 +6,7 @@ using Project.Models.Entities;
 using Project.Models.Dtos.Recipes;
 using Project.Repositories.Interfaces;
 using Project.Services.Interfaces;
+using Project.Utils;
 
 public class RecipesService(
     IRecipesRepository recipesRepository,
@@ -23,35 +24,39 @@ public class RecipesService(
     private readonly IRecipesToolsRepository recipesToolsRepository = recipesToolsRepository;
     private readonly ProjectDbContext dbContext = dbContext;
 
-    public async Task<Result<List<RecipesEntity>>> GetRecipes(Pagination pagination)
+    public async Task<Result<ICollection<RecipesResponseDto>>> GetRecipes(Pagination pagination)
     {
         if (pagination.Offset <= 0 || pagination.Limit <= 0)
         {
-            return Result.Fail<List<RecipesEntity>>("Pagination offset and limit should be greater than zero");
+            return Result.Fail<ICollection<RecipesResponseDto>>("Pagination offset and limit should be greater than zero");
         }
 
 
-        var recipes = await this.recipesRepository.GetRecipesAsync(pagination);
-        if (!recipes.Success)
+        var result = await this.recipesRepository.GetRecipesAsync(pagination);
+        if (!result.Success)
         {
-            return Result.Fail<List<RecipesEntity>>(recipes.Error!);
+            return Result.Fail<ICollection<RecipesResponseDto>>(result.Error!);
         }
 
-        return recipes;
+        var recipes = Mapper.MapToResponseDto(result.Value!);
+
+        return Result.Ok(recipes);
     }
 
-    public async Task<Result<RecipesEntity>> GetRecipe(int id)
+    public async Task<Result<RecipesResponseDto>> GetRecipe(int id)
     {
-        var recipe = await this.recipesRepository.GetRecipeByIdAsync(id);
-        if (!recipe.Success)
+        var result = await this.recipesRepository.GetRecipeByIdAsync(id);
+        if (!result.Success)
         {
-            return Result.Fail<RecipesEntity>(recipe.Error!);
+            return Result.Fail<RecipesResponseDto>(result.Error!);
         }
 
-        return recipe;
+        var recipe = Mapper.MapToResponseDto(result.Value!);
+
+        return Result.Ok(recipe);
     }
 
-    public async Task<Result<RecipesEntity>> CreateRecipe(CreateRecipesRequestDto recipe)
+    public async Task<Result<RecipesResponseDto>> CreateRecipe(CreateRecipesRequestDto recipe)
     {
         using var transaction = await this.dbContext.Database.BeginTransactionAsync();
 
@@ -65,14 +70,14 @@ public class RecipesService(
                 UserId = recipe.UserId
             };
 
-            var createdRecipe = await this.recipesRepository.CreateRecipeAsync(newEntity);
-            if (!createdRecipe.Success)
+            var result = await this.recipesRepository.CreateRecipeAsync(newEntity);
+            if (!result.Success)
             {
                 await transaction.RollbackAsync();
-                return Result.Fail<RecipesEntity>(createdRecipe.Error!);
+                return Result.Fail<RecipesResponseDto>(result.Error!);
             }
 
-            var recipeId = createdRecipe.Value!.Id;
+            var recipeId = result.Value!.Id;
 
             var insertTasks = new List<Task>
             {
@@ -85,16 +90,18 @@ public class RecipesService(
             await this.dbContext.SaveChangesAsync();
             await transaction.CommitAsync();
 
-            return createdRecipe;
+            var createdRecipe = Mapper.MapToResponseDto(result.Value!);
+
+            return Result.Ok(createdRecipe);
         }
         catch (Exception ex)
         {
             await transaction.RollbackAsync();
-            return Result.Fail<RecipesEntity>($"Failed to create recipe: {ex.Message}");
+            return Result.Fail<RecipesResponseDto>($"Failed to create recipe: {ex.Message}");
         }
     }
 
-    public async Task<Result<RecipesEntity>> UpdateRecipe(RecipesEntity recipe)
+    public async Task<Result<RecipesResponseDto>> UpdateRecipe(UpdateRecipesRequestDto recipe)
     {
         var newEntity = new RecipesEntity
         {
@@ -105,13 +112,15 @@ public class RecipesService(
             Steps = recipe.Steps,
         };
 
-        var updatedRecipe = await this.recipesRepository.UpdateRecipeAsync(newEntity);
-        if (!updatedRecipe.Success)
+        var result = await this.recipesRepository.UpdateRecipeAsync(newEntity);
+        if (!result.Success)
         {
-            return Result.Fail<RecipesEntity>(updatedRecipe.Error!);
+            return Result.Fail<RecipesResponseDto>(result.Error!);
         }
 
-        return updatedRecipe;
+        var updatedRecipe = Mapper.MapToResponseDto(result.Value!);
+
+        return Result.Ok(updatedRecipe);
     }
 
     public async Task<Result> DeleteRecipe(int id)
