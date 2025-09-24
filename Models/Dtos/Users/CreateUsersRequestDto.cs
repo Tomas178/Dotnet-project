@@ -2,7 +2,7 @@ namespace Project.Models.Dtos.Users;
 
 using System.ComponentModel.DataAnnotations;
 
-public class CreateUsersDto
+public class CreateUsersRequestDto
 {
     [Required(ErrorMessage = "Name is required")]
     public string Name { get; set; } = string.Empty;

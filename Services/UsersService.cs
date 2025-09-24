@@ -1,37 +1,43 @@
 namespace Project.Services;
 
 using Project.Models.Core;
+using Project.Models.Dtos.Users;
 using Project.Models.Entities;
 using Project.Repositories.Interfaces;
 using Project.Services.Interfaces;
+using Project.Utils;
 
 public class UsersService(IUsersRepository usersRepository) : IUsersService
 {
     private readonly IUsersRepository usersRepository = usersRepository;
 
-    public async Task<Result<List<UsersEntity>>> GetUsers()
+    public async Task<Result<ICollection<UsersResponseDto>>> GetUsers()
     {
-        var users = await this.usersRepository.GetUsersAsync();
-        if (!users.Success)
+        var result = await this.usersRepository.GetUsersAsync();
+        if (!result.Success)
         {
-            return Result.Fail<List<UsersEntity>>(users.Error!);
+            return Result.Fail<ICollection<UsersResponseDto>>(result.Error!);
         }
 
-        return users;
+        var users = Mapper.MapToResponseDto(result.Value!);
+
+        return Result.Ok(users);
     }
 
-    public async Task<Result<UsersEntity>> GetUser(int id)
+    public async Task<Result<UsersResponseDto>> GetUser(int id)
     {
-        var user = await this.usersRepository.GetUserByIdAsync(id);
-        if (!user.Success)
+        var result = await this.usersRepository.GetUserByIdAsync(id);
+        if (!result.Success)
         {
-            return Result.Fail<UsersEntity>(user.Error!);
+            return Result.Fail<UsersResponseDto>(result.Error!);
         }
+
+        var user = Mapper.MapToResponseDto(result.Value!);
 
         return user;
     }
 
-    public async Task<Result<UsersEntity>> CreateUser(UsersEntity user)
+    public async Task<Result<UsersResponseDto>> CreateUser(CreateUsersRequestDto user)
     {
         var newEntity = new UsersEntity
         {
@@ -40,16 +46,18 @@ public class UsersService(IUsersRepository usersRepository) : IUsersService
             Password = user.Password,
         };
 
-        var createdUser = await this.usersRepository.CreateUserAsync(newEntity);
-        if (!createdUser.Success)
+        var result = await this.usersRepository.CreateUserAsync(newEntity);
+        if (!result.Success)
         {
-            return Result.Fail<UsersEntity>(createdUser.Error!);
+            return Result.Fail<UsersResponseDto>(result.Error!);
         }
+
+        var createdUser = Mapper.MapToResponseDto(result.Value!);
 
         return createdUser;
     }
 
-    public async Task<Result<UsersEntity>> UpdateUser(UsersEntity user)
+    public async Task<Result<UsersResponseDto>> UpdateUser(UpdateUsersRequestDto user)
     {
         var newEntity = new UsersEntity
         {
@@ -59,11 +67,13 @@ public class UsersService(IUsersRepository usersRepository) : IUsersService
             Password = user.Password,
         };
 
-        var updatedUser = await this.usersRepository.UpdateUserAsync(newEntity);
-        if (!updatedUser.Success)
+        var result = await this.usersRepository.UpdateUserAsync(newEntity);
+        if (!result.Success)
         {
-            return Result.Fail<UsersEntity>(updatedUser.Error!);
+            return Result.Fail<UsersResponseDto>(result.Error!);
         }
+
+        var updatedUser = Mapper.MapToResponseDto(result.Value!);
 
         return updatedUser;
     }
