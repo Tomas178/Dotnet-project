@@ -1,0 +1,44 @@
+namespace Project.Utils;
+
+using Project.Models.Dtos.Recipes;
+using Project.Models.Dtos.Users;
+using Project.Models.Entities;
+
+public static class Mapper
+{
+    public static RecipesResponseDto MapToResponseDto(RecipesEntity recipe)
+    {
+        return new RecipesResponseDto
+        {
+            Id = recipe.Id,
+            User = MapToResponseDto(recipe.User),
+            Title = recipe.Title,
+            Steps = recipe.Steps,
+            Duration = recipe.Duration,
+            Ingredients = [.. recipe.Ingredients.Select(i => i.Name)],
+            Tools = [.. recipe.Tools.Select(t => t.Name)]
+        };
+    }
+
+    public static ICollection<RecipesResponseDto> MapToResponseDto(IEnumerable<RecipesEntity> recipes)
+    {
+        return [.. recipes.Select(MapToResponseDto)];
+    }
+
+
+    public static UsersResponseDto MapToResponseDto(UsersEntity user, bool includeRecipes = false)
+    {
+        return new UsersResponseDto
+        {
+            Id = user.Id,
+            Name = user.Name,
+
+            CreatedRecipes = includeRecipes
+                ? MapToResponseDto(user.CreatedRecipes)
+                : null,
+            SavedRecipes = includeRecipes
+                ? MapToResponseDto(user.SavedRecipes)
+                : null
+        };
+    }
+}
