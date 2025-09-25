@@ -32,7 +32,7 @@ public class UsersService(IUsersRepository usersRepository) : IUsersService
             return Result.Fail<UsersResponseDto>(result.Error!);
         }
 
-        var user = Mapper.MapToResponseDto(result.Value!);
+        var user = Mapper.MapToResponseDto(result.Value!, true);
 
         return user;
     }

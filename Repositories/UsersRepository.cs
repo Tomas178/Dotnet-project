@@ -15,7 +15,8 @@ public class UsersRepository(ProjectDbContext dbContext) : IUsersRepository
     {
         try
         {
-            var users = await this.dbContext.Users.ToListAsync();
+            var users = await this.dbContext.Users
+                .ToListAsync();
 
             return Result.Ok(users);
         }
@@ -30,6 +31,20 @@ public class UsersRepository(ProjectDbContext dbContext) : IUsersRepository
         try
         {
             var user = await this.dbContext.Users
+                .Include(u => u.CreatedRecipes)
+                    .ThenInclude(r => r.RecipesIngredients)
+                        .ThenInclude(ri => ri.Ingredient)
+                .Include(u => u.CreatedRecipes)
+                    .ThenInclude(r => r.RecipesTools)
+                        .ThenInclude(rt => rt.Tool)
+                .Include(u => u.SavedRecipes)
+                    .ThenInclude(sr => sr.Recipe)
+                        .ThenInclude(r => r.RecipesIngredients)
+                            .ThenInclude(ri => ri.Ingredient)
+                .Include(u => u.SavedRecipes)
+                    .ThenInclude(sr => sr.Recipe)
+                        .ThenInclude(r => r.RecipesTools)
+                            .ThenInclude(rt => rt.Tool)
                 .FirstOrDefaultAsync(u => u.Id == id);
 
             if (user is null)
