@@ -58,8 +58,6 @@ public class RecipesService(
 
     public async Task<Result<RecipesResponseDto>> CreateRecipe(CreateRecipesRequestDto recipe)
     {
-        using var transaction = await this.dbContext.Database.BeginTransactionAsync();
-
         try
         {
             var newEntity = new RecipesEntity
@@ -73,30 +71,21 @@ public class RecipesService(
             var result = await this.recipesRepository.CreateRecipeAsync(newEntity);
             if (!result.Success)
             {
-                await transaction.RollbackAsync();
                 return Result.Fail<RecipesResponseDto>(result.Error!);
             }
 
             var recipeId = result.Value!.Id;
 
-            var insertTasks = new List<Task>
-            {
-                this.InsertIngredientsAsync(recipeId, recipe.Ingredients),
-                this.InsertToolsAsync(recipeId, recipe.Tools)
-            };
-
-            await Task.WhenAll(insertTasks);
+            await this.InsertIngredientsAsync(recipeId, recipe.Ingredients);
+            await this.InsertToolsAsync(recipeId, recipe.Tools);
 
             await this.dbContext.SaveChangesAsync();
-            await transaction.CommitAsync();
 
             var createdRecipe = Mapper.MapToResponseDto(result.Value!);
-
             return Result.Ok(createdRecipe);
         }
         catch (Exception ex)
         {
-            await transaction.RollbackAsync();
             return Result.Fail<RecipesResponseDto>($"Failed to create recipe: {ex.Message}");
         }
     }
