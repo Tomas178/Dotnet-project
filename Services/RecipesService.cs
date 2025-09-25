@@ -81,6 +81,8 @@ public class RecipesService(
 
             await this.dbContext.SaveChangesAsync();
 
+            result = await this.recipesRepository.GetRecipeByIdAsync(recipeId);
+
             var createdRecipe = Mapper.MapToResponseDto(result.Value!);
             return Result.Ok(createdRecipe);
         }
