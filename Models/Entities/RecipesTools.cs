@@ -4,7 +4,7 @@ namespace Project.Models.Entities;
 using System.ComponentModel.DataAnnotations.Schema;
 
 [Table("recipes_tools")]
-public class RecipesToolsEntity : BaseTimestamps
+public class RecipesToolsEntity : BaseCreatedTimestamp
 {
     [Column("recipe_id")]
     public int RecipeId { get; set; }
