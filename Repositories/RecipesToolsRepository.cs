@@ -4,6 +4,7 @@ using Project.Database;
 using Project.Repositories.Interfaces;
 using Project.Models.Core;
 using Project.Models.Entities;
+using Microsoft.EntityFrameworkCore;
 
 public class RecipesToolsRepository(ProjectDbContext dbContext) : IRecipesToolsRepository
 {
@@ -21,6 +22,25 @@ public class RecipesToolsRepository(ProjectDbContext dbContext) : IRecipesToolsR
         catch (Exception ex)
         {
             return Result.Fail<List<RecipesToolsEntity>>(ex.Message);
+        }
+    }
+
+    public async Task<Result> DeleteByRecipeIdAsync(int id)
+    {
+        try
+        {
+            var links = await this.dbContext.RecipesTools
+                .Where(rt => rt.RecipeId == id)
+                .ToListAsync();
+
+            this.dbContext.RemoveRange(links);
+            await this.dbContext.SaveChangesAsync();
+
+            return Result.Ok();
+        }
+        catch (Exception ex)
+        {
+            return Result.Fail($"Failed to delete tools {ex.Message}");
         }
     }
 }

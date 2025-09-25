@@ -45,13 +45,24 @@ public class SavedRecipesRepository(ProjectDbContext dbContext) : ISavedRecipesR
             this.dbContext.SavedRecipes.Add(link);
             await this.dbContext.SaveChangesAsync();
 
-            return Result.Ok(link);
+            var fullLink = await this.dbContext.SavedRecipes
+                .Include(sr => sr.User)
+                .Include(sr => sr.Recipe)
+                .FirstOrDefaultAsync(sr => sr.UserId == link.UserId && sr.RecipeId == link.RecipeId);
+
+            if (fullLink == null)
+            {
+                return Result.Fail<SavedRecipesEntity>("Failed to load saved recipe with Recipe and User");
+            }
+
+            return Result.Ok(fullLink);
         }
         catch (Exception ex)
         {
             return Result.Fail<SavedRecipesEntity>(ex.Message);
         }
     }
+
 
     public async Task<Result> DeleteSavedRecipeLinkAsync(SavedRecipesEntity link)
     {

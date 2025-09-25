@@ -94,25 +94,38 @@ public class RecipesService(
 
     public async Task<Result<RecipesResponseDto>> UpdateRecipe(UpdateRecipesRequestDto recipe)
     {
-        var newEntity = new RecipesEntity
+        var result = await this.recipesRepository.GetRecipeByIdAsync(recipe.Id);
+        if (!result.Success || result.Value == null)
         {
-            Id = recipe.Id,
-            UserId = recipe.UserId,
-            Title = recipe.Title,
-            Duration = recipe.Duration,
-            Steps = recipe.Steps,
-        };
-
-        var result = await this.recipesRepository.UpdateRecipeAsync(newEntity);
-        if (!result.Success)
-        {
-            return Result.Fail<RecipesResponseDto>(result.Error!);
+            return Result.Fail<RecipesResponseDto>(result.Error ?? "Recipe not found");
         }
 
-        var updatedRecipe = Mapper.MapToResponseDto(result.Value!);
+        var existingRecipe = result.Value;
 
-        return Result.Ok(updatedRecipe);
+        existingRecipe.Title = recipe.Title;
+        existingRecipe.Steps = string.Join('\n', recipe.Steps);
+        existingRecipe.Duration = recipe.Duration;
+
+        await this.recipesIngredientsRepository.DeleteByRecipeIdAsync(existingRecipe.Id);
+        await this.InsertIngredientsAsync(existingRecipe.Id, recipe.Ingredients);
+
+
+        await this.recipesToolsRepository.DeleteByRecipeIdAsync(existingRecipe.Id);
+        await this.InsertToolsAsync(existingRecipe.Id, recipe.Tools);
+
+
+        await this.dbContext.SaveChangesAsync();
+
+        var updatedRecipe = await this.recipesRepository.GetRecipeByIdAsync(existingRecipe.Id);
+        if (updatedRecipe.Value is null)
+        {
+            return Result.Fail<RecipesResponseDto>("Failed to load updated recipe");
+        }
+
+        var dto = Mapper.MapToResponseDto(updatedRecipe.Value);
+        return Result.Ok(dto);
     }
+
 
     public async Task<Result> DeleteRecipe(int id)
     {
