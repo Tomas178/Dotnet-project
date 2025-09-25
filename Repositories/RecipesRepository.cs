@@ -35,8 +35,10 @@ public class RecipesRepository(ProjectDbContext dbContext) : IRecipesRepository
         {
             var recipe = await this.dbContext.Recipes
             .Include(r => r.User)
-            .Include(r => r.Ingredients)
-            .Include(r => r.Tools)
+            .Include(r => r.RecipesIngredients)
+                .ThenInclude(ri => ri.Ingredient)
+            .Include(r => r.RecipesTools)
+                .ThenInclude(rt => rt.Tool)
             .FirstOrDefaultAsync(r => r.Id == id);
 
             if (recipe is null)

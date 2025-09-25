@@ -8,7 +8,9 @@ public class RecipesToolsEntity : BaseTimestamps
 {
     [Column("recipe_id")]
     public int RecipeId { get; set; }
+    public RecipesEntity Recipe { get; set; } = null!;
 
     [Column("tool_id")]
     public int ToolId { get; set; }
+    public ToolsEntity Tool { get; set; } = null!;
 }

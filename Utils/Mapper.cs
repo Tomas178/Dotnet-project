@@ -15,8 +15,8 @@ public static class Mapper
             Title = recipe.Title,
             Steps = [.. recipe.Steps.Split('\n')],
             Duration = recipe.Duration,
-            Ingredients = [.. recipe.Ingredients.Select(i => i.Name)],
-            Tools = [.. recipe.Tools.Select(t => t.Name)]
+            Ingredients = [.. recipe.RecipesIngredients.Select(ri => ri.Ingredient.Name)],
+            Tools = [.. recipe.RecipesTools.Select(rt => rt.Tool.Name)],
         };
     }
 

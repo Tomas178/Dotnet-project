@@ -22,6 +22,6 @@ public class RecipesEntity : BaseTimestamps
     [Column("duration")]
     public int Duration { get; set; }
 
-    public ICollection<IngredientsEntity> Ingredients { get; set; } = [];
-    public ICollection<ToolsEntity> Tools { get; set; } = [];
+    public ICollection<RecipesIngredientsEntity> RecipesIngredients { get; set; } = [];
+    public ICollection<RecipesToolsEntity> RecipesTools { get; set; } = [];
 }
