@@ -24,7 +24,7 @@ public class SavedRecipesService(
         }
 
 
-        if (recipeToBeSaved.Value.UserId == link.UserId)
+        if (recipeToBeSaved.Value.User.Id == link.UserId)
         {
             return Result.Fail<SavedRecipesResponseDto>("Author cannot save his own recipe");
         }
