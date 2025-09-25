@@ -1,6 +1,7 @@
 namespace Project.Utils;
 
 using Project.Models.Dtos.Recipes;
+using Project.Models.Dtos.SavedRecipes;
 using Project.Models.Dtos.Users;
 using Project.Models.Entities;
 
@@ -45,5 +46,14 @@ public static class Mapper
     public static ICollection<UsersResponseDto> MapToResponseDto(IEnumerable<UsersEntity> users, bool includeRecipes = false)
     {
         return [.. users.Select(user => MapToResponseDto(user, includeRecipes))];
+    }
+
+    public static SavedRecipesResponseDto MapToResponseDto(SavedRecipesEntity link)
+    {
+        return new SavedRecipesResponseDto
+        {
+            Recipe = MapToResponseDto(link.Recipe),
+            User = MapToResponseDto(link.User)
+        };
     }
 }
