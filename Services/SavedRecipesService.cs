@@ -4,6 +4,8 @@ using Project.Services.Interfaces;
 using Project.Models.Core;
 using Project.Models.Entities;
 using Project.Repositories.Interfaces;
+using Project.Models.Dtos.SavedRecipes;
+using Project.Utils;
 
 public class SavedRecipesService(
     ISavedRecipesRepository savedRecipesRepository,
@@ -13,18 +15,18 @@ public class SavedRecipesService(
     private readonly ISavedRecipesRepository savedRecipesRepository = savedRecipesRepository;
     private readonly IRecipesService recipesService = recipesService;
 
-    public async Task<Result<SavedRecipesEntity>> CreateLink(SavedRecipesEntity link)
+    public async Task<Result<SavedRecipesResponseDto>> CreateLink(PostLinkRequestDto link)
     {
         var recipeToBeSaved = await this.recipesService.GetRecipe(link.RecipeId);
         if (recipeToBeSaved.Value == null)
         {
-            return Result.Fail<SavedRecipesEntity>("Recipe not found");
+            return Result.Fail<SavedRecipesResponseDto>("Recipe not found");
         }
 
 
         if (recipeToBeSaved.Value.UserId == link.UserId)
         {
-            return Result.Fail<SavedRecipesEntity>("Author cannot save his own recipe");
+            return Result.Fail<SavedRecipesResponseDto>("Author cannot save his own recipe");
         }
 
         var newEntity = new SavedRecipesEntity
@@ -36,18 +38,26 @@ public class SavedRecipesService(
         var createdLink = await this.savedRecipesRepository.CreateSavedRecipeLinkAsync(newEntity);
         if (!createdLink.Success)
         {
-            return Result.Fail<SavedRecipesEntity>(createdLink.Error!);
+            return Result.Fail<SavedRecipesResponseDto>(createdLink.Error!);
         }
 
-        return createdLink;
+        var savedRecipe = Mapper.MapToResponseDto(createdLink.Value!);
+
+        return savedRecipe;
     }
 
-    public async Task<Result> DeleteLink(SavedRecipesEntity link)
+    public async Task<Result> DeleteLink(PostLinkRequestDto link)
     {
-        var deletedLink = await this.savedRecipesRepository.DeleteSavedRecipeLinkAsync(link);
+        var newEntity = new SavedRecipesEntity
+        {
+            RecipeId = link.RecipeId,
+            UserId = link.UserId
+        };
+
+        var deletedLink = await this.savedRecipesRepository.DeleteSavedRecipeLinkAsync(newEntity);
         if (!deletedLink.Success)
         {
-            return Result.Fail<SavedRecipesEntity>(deletedLink.Error!);
+            return Result.Fail(deletedLink.Error!);
         }
 
         return deletedLink;

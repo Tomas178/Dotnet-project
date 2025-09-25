@@ -2,7 +2,7 @@ namespace Project.Controllers;
 
 using Microsoft.AspNetCore.Mvc;
 using Project.Services.Interfaces;
-using Project.Models.Entities;
+using Project.Models.Dtos.SavedRecipes;
 
 [ApiController]
 [Route("[controller]")]
@@ -11,7 +11,7 @@ public class SavedRecipesController(ISavedRecipesService savedRecipesService) : 
     private readonly ISavedRecipesService savedRecipesService = savedRecipesService;
 
     [HttpPost("save")]
-    public async Task<IActionResult> Save(SavedRecipesEntity link)
+    public async Task<IActionResult> Save(PostLinkRequestDto link)
     {
         var result = await this.savedRecipesService.CreateLink(link);
         if (!result.Success || result.Value is null)
@@ -19,11 +19,11 @@ public class SavedRecipesController(ISavedRecipesService savedRecipesService) : 
             return this.NotFound(result.Error);
         }
 
-        return this.NoContent();
+        return this.Ok(result.Value);
     }
 
     [HttpPost("unsave")]
-    public async Task<IActionResult> Unsave(SavedRecipesEntity link)
+    public async Task<IActionResult> Unsave(PostLinkRequestDto link)
     {
         var result = await this.savedRecipesService.DeleteLink(link);
         if (!result.Success)
