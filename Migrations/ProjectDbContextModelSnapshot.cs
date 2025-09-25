@@ -40,7 +40,12 @@ namespace Project.Migrations
                         .HasColumnType("text")
                         .HasColumnName("name");
 
+                    b.Property<int?>("RecipesEntityId")
+                        .HasColumnType("integer");
+
                     b.HasKey("Id");
+
+                    b.HasIndex("RecipesEntityId");
 
                     b.ToTable("ingredients");
                 });
@@ -172,7 +177,12 @@ namespace Project.Migrations
                         .HasColumnType("text")
                         .HasColumnName("name");
 
+                    b.Property<int?>("RecipesEntityId")
+                        .HasColumnType("integer");
+
                     b.HasKey("Id");
+
+                    b.HasIndex("RecipesEntityId");
 
                     b.ToTable("tools");
                 });
@@ -214,10 +224,17 @@ namespace Project.Migrations
                     b.ToTable("users");
                 });
 
+            modelBuilder.Entity("Project.Models.Entities.IngredientsEntity", b =>
+                {
+                    b.HasOne("Project.Models.Entities.RecipesEntity", null)
+                        .WithMany("Ingredients")
+                        .HasForeignKey("RecipesEntityId");
+                });
+
             modelBuilder.Entity("Project.Models.Entities.RecipesEntity", b =>
                 {
                     b.HasOne("Project.Models.Entities.UsersEntity", "User")
-                        .WithMany("Recipes")
+                        .WithMany("CreatedRecipes")
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -234,7 +251,7 @@ namespace Project.Migrations
                         .IsRequired();
 
                     b.HasOne("Project.Models.Entities.UsersEntity", "User")
-                        .WithMany()
+                        .WithMany("SavedRecipes")
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -244,9 +261,25 @@ namespace Project.Migrations
                     b.Navigation("User");
                 });
 
+            modelBuilder.Entity("Project.Models.Entities.ToolsEntity", b =>
+                {
+                    b.HasOne("Project.Models.Entities.RecipesEntity", null)
+                        .WithMany("Tools")
+                        .HasForeignKey("RecipesEntityId");
+                });
+
+            modelBuilder.Entity("Project.Models.Entities.RecipesEntity", b =>
+                {
+                    b.Navigation("Ingredients");
+
+                    b.Navigation("Tools");
+                });
+
             modelBuilder.Entity("Project.Models.Entities.UsersEntity", b =>
                 {
-                    b.Navigation("Recipes");
+                    b.Navigation("CreatedRecipes");
+
+                    b.Navigation("SavedRecipes");
                 });
 #pragma warning restore 612, 618
         }

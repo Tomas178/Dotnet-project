@@ -19,5 +19,5 @@ public class UsersEntity : BaseTimestamps
     public string Password { get; set; } = string.Empty;
 
     public ICollection<RecipesEntity> CreatedRecipes { get; set; } = [];
-    public ICollection<RecipesEntity> SavedRecipes { get; set; } = [];
+    public ICollection<SavedRecipesEntity> SavedRecipes { get; set; } = [];
 }

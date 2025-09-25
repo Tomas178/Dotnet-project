@@ -52,7 +52,7 @@ public class ProjectDbContext(DbContextOptions<ProjectDbContext> options) : DbCo
     {
         modelBuilder.Entity<RecipesEntity>()
             .HasOne(r => r.User)
-            .WithMany(u => u.Recipes)
+            .WithMany(u => u.CreatedRecipes)
             .HasForeignKey(r => r.UserId)
             .OnDelete(DeleteBehavior.Cascade);
 

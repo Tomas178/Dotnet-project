@@ -8,6 +8,8 @@ using Project.Services;
 var builder = WebApplication.CreateBuilder(args);
 var connectionString = builder.Configuration["ConnectionStrings:DefaultConnection"];
 
+builder.Services.AddControllers();
+
 builder.Services.AddScoped<IUsersRepository, UsersRepository>();
 builder.Services.AddScoped<IRecipesRepository, RecipesRepository>();
 builder.Services.AddScoped<ISavedRecipesRepository, SavedRecipesRepository>();
@@ -25,7 +27,8 @@ builder.Services.AddDbContext<ProjectDbContext>(options =>
 
 var app = builder.Build();
 
-
 app.UseHttpsRedirection();
+
+app.MapControllers();
 
 app.Run();
