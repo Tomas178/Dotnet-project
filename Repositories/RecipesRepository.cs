@@ -15,6 +15,7 @@ public class RecipesRepository(ProjectDbContext dbContext) : IRecipesRepository
         try
         {
             var recipes = await this.dbContext.Recipes
+            .Include(r => r.User)
             .OrderBy(r => r.Id)
             .Skip(pagination.Offset * pagination.Limit)
             .Take(pagination.Limit)
@@ -32,7 +33,12 @@ public class RecipesRepository(ProjectDbContext dbContext) : IRecipesRepository
     {
         try
         {
-            var recipe = await this.dbContext.Recipes.FindAsync(id);
+            var recipe = await this.dbContext.Recipes
+            .Include(r => r.User)
+            .Include(r => r.Ingredients)
+            .Include(r => r.Tools)
+            .FirstOrDefaultAsync(r => r.Id == id);
+
             if (recipe is null)
             {
                 return Result.Fail<RecipesEntity>($"Recipe with id: {id} not found");

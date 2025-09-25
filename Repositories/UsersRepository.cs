@@ -30,7 +30,6 @@ public class UsersRepository(ProjectDbContext dbContext) : IUsersRepository
         try
         {
             var user = await this.dbContext.Users
-                .Include(u => u.Email)
                 .FirstOrDefaultAsync(u => u.Id == id);
 
             if (user is null)

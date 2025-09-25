@@ -26,7 +26,7 @@ public class RecipesService(
 
     public async Task<Result<ICollection<RecipesResponseDto>>> GetRecipes(Pagination pagination)
     {
-        if (pagination.Offset <= 0 || pagination.Limit <= 0)
+        if (pagination.Offset < 0 || pagination.Limit <= 0)
         {
             return Result.Fail<ICollection<RecipesResponseDto>>("Pagination offset and limit should be greater than zero");
         }
