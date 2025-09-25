@@ -13,7 +13,7 @@ public static class Mapper
             Id = recipe.Id,
             User = MapToResponseDto(recipe.User),
             Title = recipe.Title,
-            Steps = recipe.Steps,
+            Steps = [.. recipe.Steps.Split('\n')],
             Duration = recipe.Duration,
             Ingredients = [.. recipe.Ingredients.Select(i => i.Name)],
             Tools = [.. recipe.Tools.Select(t => t.Name)]
