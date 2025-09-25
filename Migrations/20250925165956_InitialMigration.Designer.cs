@@ -12,8 +12,8 @@ using Project.Database;
 namespace Project.Migrations
 {
     [DbContext(typeof(ProjectDbContext))]
-    [Migration("20250925073337_InitialMigrate")]
-    partial class InitialMigrate
+    [Migration("20250925165956_InitialMigration")]
+    partial class InitialMigration
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -43,12 +43,7 @@ namespace Project.Migrations
                         .HasColumnType("text")
                         .HasColumnName("name");
 
-                    b.Property<int?>("RecipesEntityId")
-                        .HasColumnType("integer");
-
                     b.HasKey("Id");
-
-                    b.HasIndex("RecipesEntityId");
 
                     b.ToTable("ingredients");
                 });
@@ -109,11 +104,9 @@ namespace Project.Migrations
                         .HasColumnType("timestamp with time zone")
                         .HasColumnName("created_at");
 
-                    b.Property<DateTime>("UpdatedAt")
-                        .HasColumnType("timestamp with time zone")
-                        .HasColumnName("updated_at");
-
                     b.HasKey("RecipeId", "IngredientId");
+
+                    b.HasIndex("IngredientId");
 
                     b.ToTable("recipes_ingredients");
                 });
@@ -132,11 +125,9 @@ namespace Project.Migrations
                         .HasColumnType("timestamp with time zone")
                         .HasColumnName("created_at");
 
-                    b.Property<DateTime>("UpdatedAt")
-                        .HasColumnType("timestamp with time zone")
-                        .HasColumnName("updated_at");
-
                     b.HasKey("RecipeId", "ToolId");
+
+                    b.HasIndex("ToolId");
 
                     b.ToTable("recipes_tools");
                 });
@@ -180,12 +171,7 @@ namespace Project.Migrations
                         .HasColumnType("text")
                         .HasColumnName("name");
 
-                    b.Property<int?>("RecipesEntityId")
-                        .HasColumnType("integer");
-
                     b.HasKey("Id");
-
-                    b.HasIndex("RecipesEntityId");
 
                     b.ToTable("tools");
                 });
@@ -227,13 +213,6 @@ namespace Project.Migrations
                     b.ToTable("users");
                 });
 
-            modelBuilder.Entity("Project.Models.Entities.IngredientsEntity", b =>
-                {
-                    b.HasOne("Project.Models.Entities.RecipesEntity", null)
-                        .WithMany("Ingredients")
-                        .HasForeignKey("RecipesEntityId");
-                });
-
             modelBuilder.Entity("Project.Models.Entities.RecipesEntity", b =>
                 {
                     b.HasOne("Project.Models.Entities.UsersEntity", "User")
@@ -243,6 +222,44 @@ namespace Project.Migrations
                         .IsRequired();
 
                     b.Navigation("User");
+                });
+
+            modelBuilder.Entity("Project.Models.Entities.RecipesIngredientsEntity", b =>
+                {
+                    b.HasOne("Project.Models.Entities.IngredientsEntity", "Ingredient")
+                        .WithMany()
+                        .HasForeignKey("IngredientId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Project.Models.Entities.RecipesEntity", "Recipe")
+                        .WithMany("RecipesIngredients")
+                        .HasForeignKey("RecipeId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Ingredient");
+
+                    b.Navigation("Recipe");
+                });
+
+            modelBuilder.Entity("Project.Models.Entities.RecipesToolsEntity", b =>
+                {
+                    b.HasOne("Project.Models.Entities.RecipesEntity", "Recipe")
+                        .WithMany("RecipesTools")
+                        .HasForeignKey("RecipeId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Project.Models.Entities.ToolsEntity", "Tool")
+                        .WithMany()
+                        .HasForeignKey("ToolId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Recipe");
+
+                    b.Navigation("Tool");
                 });
 
             modelBuilder.Entity("Project.Models.Entities.SavedRecipesEntity", b =>
@@ -264,18 +281,11 @@ namespace Project.Migrations
                     b.Navigation("User");
                 });
 
-            modelBuilder.Entity("Project.Models.Entities.ToolsEntity", b =>
-                {
-                    b.HasOne("Project.Models.Entities.RecipesEntity", null)
-                        .WithMany("Tools")
-                        .HasForeignKey("RecipesEntityId");
-                });
-
             modelBuilder.Entity("Project.Models.Entities.RecipesEntity", b =>
                 {
-                    b.Navigation("Ingredients");
+                    b.Navigation("RecipesIngredients");
 
-                    b.Navigation("Tools");
+                    b.Navigation("RecipesTools");
                 });
 
             modelBuilder.Entity("Project.Models.Entities.UsersEntity", b =>

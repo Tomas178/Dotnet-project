@@ -7,37 +7,37 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace Project.Migrations
 {
     /// <inheritdoc />
-    public partial class InitialMigrate : Migration
+    public partial class InitialMigration : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.CreateTable(
-                name: "recipes_ingredients",
+                name: "ingredients",
                 columns: table => new
                 {
-                    recipe_id = table.Column<int>(type: "integer", nullable: false),
-                    ingredient_id = table.Column<int>(type: "integer", nullable: false),
-                    created_at = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
-                    updated_at = table.Column<DateTime>(type: "timestamp with time zone", nullable: false)
+                    id = table.Column<int>(type: "integer", nullable: false)
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    name = table.Column<string>(type: "text", nullable: false),
+                    created_at = table.Column<DateTime>(type: "timestamp with time zone", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_recipes_ingredients", x => new { x.recipe_id, x.ingredient_id });
+                    table.PrimaryKey("PK_ingredients", x => x.id);
                 });
 
             migrationBuilder.CreateTable(
-                name: "recipes_tools",
+                name: "tools",
                 columns: table => new
                 {
-                    recipe_id = table.Column<int>(type: "integer", nullable: false),
-                    tool_id = table.Column<int>(type: "integer", nullable: false),
-                    created_at = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
-                    updated_at = table.Column<DateTime>(type: "timestamp with time zone", nullable: false)
+                    id = table.Column<int>(type: "integer", nullable: false)
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    name = table.Column<string>(type: "text", nullable: false),
+                    created_at = table.Column<DateTime>(type: "timestamp with time zone", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_recipes_tools", x => new { x.recipe_id, x.tool_id });
+                    table.PrimaryKey("PK_tools", x => x.id);
                 });
 
             migrationBuilder.CreateTable(
@@ -82,23 +82,53 @@ namespace Project.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "ingredients",
+                name: "recipes_ingredients",
                 columns: table => new
                 {
-                    id = table.Column<int>(type: "integer", nullable: false)
-                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
-                    name = table.Column<string>(type: "text", nullable: false),
-                    RecipesEntityId = table.Column<int>(type: "integer", nullable: true),
+                    recipe_id = table.Column<int>(type: "integer", nullable: false),
+                    ingredient_id = table.Column<int>(type: "integer", nullable: false),
                     created_at = table.Column<DateTime>(type: "timestamp with time zone", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_ingredients", x => x.id);
+                    table.PrimaryKey("PK_recipes_ingredients", x => new { x.recipe_id, x.ingredient_id });
                     table.ForeignKey(
-                        name: "FK_ingredients_recipes_RecipesEntityId",
-                        column: x => x.RecipesEntityId,
+                        name: "FK_recipes_ingredients_ingredients_ingredient_id",
+                        column: x => x.ingredient_id,
+                        principalTable: "ingredients",
+                        principalColumn: "id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_recipes_ingredients_recipes_recipe_id",
+                        column: x => x.recipe_id,
                         principalTable: "recipes",
-                        principalColumn: "id");
+                        principalColumn: "id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "recipes_tools",
+                columns: table => new
+                {
+                    recipe_id = table.Column<int>(type: "integer", nullable: false),
+                    tool_id = table.Column<int>(type: "integer", nullable: false),
+                    created_at = table.Column<DateTime>(type: "timestamp with time zone", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_recipes_tools", x => new { x.recipe_id, x.tool_id });
+                    table.ForeignKey(
+                        name: "FK_recipes_tools_recipes_recipe_id",
+                        column: x => x.recipe_id,
+                        principalTable: "recipes",
+                        principalColumn: "id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_recipes_tools_tools_tool_id",
+                        column: x => x.tool_id,
+                        principalTable: "tools",
+                        principalColumn: "id",
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -126,53 +156,30 @@ namespace Project.Migrations
                         onDelete: ReferentialAction.Cascade);
                 });
 
-            migrationBuilder.CreateTable(
-                name: "tools",
-                columns: table => new
-                {
-                    id = table.Column<int>(type: "integer", nullable: false)
-                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
-                    name = table.Column<string>(type: "text", nullable: false),
-                    RecipesEntityId = table.Column<int>(type: "integer", nullable: true),
-                    created_at = table.Column<DateTime>(type: "timestamp with time zone", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_tools", x => x.id);
-                    table.ForeignKey(
-                        name: "FK_tools_recipes_RecipesEntityId",
-                        column: x => x.RecipesEntityId,
-                        principalTable: "recipes",
-                        principalColumn: "id");
-                });
-
-            migrationBuilder.CreateIndex(
-                name: "IX_ingredients_RecipesEntityId",
-                table: "ingredients",
-                column: "RecipesEntityId");
-
             migrationBuilder.CreateIndex(
                 name: "IX_recipes_user_id",
                 table: "recipes",
                 column: "user_id");
 
             migrationBuilder.CreateIndex(
+                name: "IX_recipes_ingredients_ingredient_id",
+                table: "recipes_ingredients",
+                column: "ingredient_id");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_recipes_tools_tool_id",
+                table: "recipes_tools",
+                column: "tool_id");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_saved_recipes_recipe_id",
                 table: "saved_recipes",
                 column: "recipe_id");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_tools_RecipesEntityId",
-                table: "tools",
-                column: "RecipesEntityId");
         }
 
         /// <inheritdoc />
         protected override void Down(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.DropTable(
-                name: "ingredients");
-
             migrationBuilder.DropTable(
                 name: "recipes_ingredients");
 
@@ -181,6 +188,9 @@ namespace Project.Migrations
 
             migrationBuilder.DropTable(
                 name: "saved_recipes");
+
+            migrationBuilder.DropTable(
+                name: "ingredients");
 
             migrationBuilder.DropTable(
                 name: "tools");
