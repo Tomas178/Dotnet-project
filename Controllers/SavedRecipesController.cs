@@ -10,6 +10,7 @@ public class SavedRecipesController(ISavedRecipesService savedRecipesService) : 
 {
     private readonly ISavedRecipesService savedRecipesService = savedRecipesService;
 
+    [HttpPost("save")]
     public async Task<IActionResult> Save(SavedRecipesEntity link)
     {
         var result = await this.savedRecipesService.CreateLink(link);
@@ -21,6 +22,7 @@ public class SavedRecipesController(ISavedRecipesService savedRecipesService) : 
         return this.NoContent();
     }
 
+    [HttpPost("unsave")]
     public async Task<IActionResult> Unsave(SavedRecipesEntity link)
     {
         var result = await this.savedRecipesService.DeleteLink(link);
