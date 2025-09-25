@@ -5,7 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 using Project.Models.Dtos.Users;
 
 [ApiController]
-[Route("api/[controller]")]
+[Route("[controller]")]
 public class UsersController(IUsersService usersService) : ControllerBase
 {
 
