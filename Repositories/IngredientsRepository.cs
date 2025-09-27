@@ -25,6 +25,19 @@ public class IngredientsRepository(ProjectDbContext dbContext) : IIngredientsRep
         }
     }
 
+    public async Task<Result<List<IngredientsEntity>>> GetIngredientsAsync()
+    {
+        try
+        {
+            var ingredients = await this.dbContext.Ingredients.ToListAsync();
+            return Result.Ok(ingredients);
+        }
+        catch (Exception ex)
+        {
+            return Result.Fail<List<IngredientsEntity>>(ex.Message);
+        }
+    }
+
     public async Task<Result<IngredientsEntity>> GetByIdAsync(int id)
     {
         try

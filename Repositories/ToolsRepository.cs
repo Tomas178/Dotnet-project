@@ -25,6 +25,19 @@ public class ToolsRepository(ProjectDbContext dbContext) : IToolsRepository
         }
     }
 
+    public async Task<Result<List<ToolsEntity>>> GetToolsAsync()
+    {
+        try
+        {
+            var tools = await this.dbContext.Tools.ToListAsync();
+            return Result.Ok(tools);
+        }
+        catch (Exception ex)
+        {
+            return Result.Fail<List<ToolsEntity>>(ex.Message);
+        }
+    }
+
     public async Task<Result<ToolsEntity>> GetByIdAsync(int id)
     {
         try
