@@ -64,7 +64,7 @@ public class RecipesService(
         try
         {
             var checkUser = await this.usersService.GetUser(recipe.UserId);
-            if (!checkUser.Success)
+            if (!checkUser.Success || checkUser.Value == null)
             {
                 return Result.Fail<RecipesResponseDto>(checkUser.Error!);
             }
@@ -74,7 +74,7 @@ public class RecipesService(
                 Title = recipe.Title,
                 Duration = recipe.Duration,
                 Steps = string.Join('\n', recipe.Steps),
-                UserId = recipe.UserId
+                UserId = checkUser.Value.Id
             };
 
             var result = await this.recipesRepository.CreateRecipeAsync(newEntity);
