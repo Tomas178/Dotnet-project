@@ -116,6 +116,11 @@ public class RecipesService(
             return Result.Fail<RecipesResponseDto>(checkRecipe.Error!);
         }
 
+        if (checkRecipe.Value.UserId != checkUser.Value.Id)
+        {
+            return Result.Fail<RecipesResponseDto>("You are not the author!");
+        }
+
         var existingRecipe = checkRecipe.Value;
 
         existingRecipe.Title = recipe.Title;
@@ -149,6 +154,11 @@ public class RecipesService(
         if (!checkRecipe.Success || checkRecipe.Value == null)
         {
             return Result.Fail<RecipesResponseDto>(checkRecipe.Error!);
+        }
+
+        if (checkRecipe.Value.UserId != checkRecipe.Value.UserId)
+        {
+            return Result.Fail<RecipesResponseDto>("You are not the author!");
         }
 
         var deletedRecipe = await this.recipesRepository.DeleteRecipeAsync(id);
