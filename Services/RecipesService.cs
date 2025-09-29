@@ -128,7 +128,7 @@ public class RecipesService(
         var updatedRecipe = await this.recipesRepository.GetRecipeByIdAsync(existingRecipe.Id);
         if (!updatedRecipe.Success || updatedRecipe.Value == null)
         {
-            return Result.Fail<RecipesResponseDto>("Failed to load updated recipe");
+            return Result.Fail<RecipesResponseDto>("Failed to update the recipe");
         }
 
         var dto = Mapper.MapToResponseDto(updatedRecipe.Value);
