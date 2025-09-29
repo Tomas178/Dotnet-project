@@ -14,6 +14,7 @@ public class RecipesService(
     IRecipesIngredientsRepository recipesIngredientsRepository,
     IToolsRepository toolsRepository,
     IRecipesToolsRepository recipesToolsRepository,
+    IUsersService usersService,
     ProjectDbContext dbContext
     ) : IRecipesService
 {
@@ -22,6 +23,8 @@ public class RecipesService(
     private readonly IRecipesIngredientsRepository recipesIngredientsRepository = recipesIngredientsRepository;
     private readonly IToolsRepository toolsRepository = toolsRepository;
     private readonly IRecipesToolsRepository recipesToolsRepository = recipesToolsRepository;
+
+    private readonly IUsersService usersService = usersService;
     private readonly ProjectDbContext dbContext = dbContext;
 
     public async Task<Result<ICollection<RecipesResponseDto>>> GetRecipes(Pagination pagination)
@@ -60,6 +63,12 @@ public class RecipesService(
     {
         try
         {
+            var checkUser = await this.usersService.GetUser(recipe.UserId);
+            if (!checkUser.Success)
+            {
+                return Result.Fail<RecipesResponseDto>(checkUser.Error!);
+            }
+
             var newEntity = new RecipesEntity
             {
                 Title = recipe.Title,
