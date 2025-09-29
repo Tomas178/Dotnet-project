@@ -110,13 +110,13 @@ public class RecipesService(
         }
         ;
 
-        var result = await this.recipesRepository.GetRecipeByIdAsync(recipe.Id);
-        if (!result.Success || result.Value == null)
+        var checkRecipe = await this.recipesRepository.GetRecipeByIdAsync(recipe.Id);
+        if (!checkRecipe.Success || checkRecipe.Value == null)
         {
-            return Result.Fail<RecipesResponseDto>(result.Error!);
+            return Result.Fail<RecipesResponseDto>(checkRecipe.Error!);
         }
 
-        var existingRecipe = result.Value;
+        var existingRecipe = checkRecipe.Value;
 
         existingRecipe.Title = recipe.Title;
         existingRecipe.Steps = string.Join('\n', recipe.Steps);
@@ -145,6 +145,12 @@ public class RecipesService(
 
     public async Task<Result> DeleteRecipe(int id)
     {
+        var checkRecipe = await this.recipesRepository.GetRecipeByIdAsync(id);
+        if (!checkRecipe.Success || checkRecipe.Value == null)
+        {
+            return Result.Fail<RecipesResponseDto>(checkRecipe.Error!);
+        }
+
         var deletedRecipe = await this.recipesRepository.DeleteRecipeAsync(id);
         if (!deletedRecipe.Success)
         {
