@@ -49,7 +49,7 @@ public class UsersRepository(ProjectDbContext dbContext) : IUsersRepository
 
             if (user is null)
             {
-                return Result.Fail<UsersEntity>("User not found");
+                return Result.Fail<UsersEntity>($"User with ID: {id} not found");
             }
 
             return Result.Ok(user);
