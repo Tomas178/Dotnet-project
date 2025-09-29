@@ -9,5 +9,5 @@ public interface IRecipesService
     public Task<Result<RecipesResponseDto>> GetRecipe(int id);
     public Task<Result<RecipesResponseDto>> CreateRecipe(CreateRecipesRequestDto recipe);
     public Task<Result<RecipesResponseDto>> UpdateRecipe(UpdateRecipesRequestDto recipe);
-    public Task<Result> DeleteRecipe(int recipeId, int userId);
+    public Task<Result> DeleteRecipe(int id);
 }

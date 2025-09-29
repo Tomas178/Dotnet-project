@@ -148,20 +148,15 @@ public class RecipesService(
     }
 
 
-    public async Task<Result> DeleteRecipe(int recipeId, int userId)
+    public async Task<Result> DeleteRecipe(int id)
     {
-        var checkRecipe = await this.recipesRepository.GetRecipeByIdAsync(recipeId);
+        var checkRecipe = await this.recipesRepository.GetRecipeByIdAsync(id);
         if (!checkRecipe.Success || checkRecipe.Value == null)
         {
             return Result.Fail<RecipesResponseDto>(checkRecipe.Error!);
         }
 
-        if (userId != checkRecipe.Value.UserId)
-        {
-            return Result.Fail<RecipesResponseDto>("You are not the author!");
-        }
-
-        var deletedRecipe = await this.recipesRepository.DeleteRecipeAsync(recipeId);
+        var deletedRecipe = await this.recipesRepository.DeleteRecipeAsync(id);
         if (!deletedRecipe.Success)
         {
             return Result.Fail(deletedRecipe.Error!);
