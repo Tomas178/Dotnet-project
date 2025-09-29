@@ -103,10 +103,17 @@ public class RecipesService(
 
     public async Task<Result<RecipesResponseDto>> UpdateRecipe(UpdateRecipesRequestDto recipe)
     {
+        var checkUser = await this.usersService.GetUser(recipe.UserId);
+        if (!checkUser.Success || checkUser.Value == null)
+        {
+            return Result.Fail<RecipesResponseDto>(checkUser.Error!);
+        }
+        ;
+
         var result = await this.recipesRepository.GetRecipeByIdAsync(recipe.Id);
         if (!result.Success || result.Value == null)
         {
-            return Result.Fail<RecipesResponseDto>(result.Error ?? "Recipe not found");
+            return Result.Fail<RecipesResponseDto>(result.Error!);
         }
 
         var existingRecipe = result.Value;
