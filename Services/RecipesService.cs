@@ -126,7 +126,7 @@ public class RecipesService(
         await this.dbContext.SaveChangesAsync();
 
         var updatedRecipe = await this.recipesRepository.GetRecipeByIdAsync(existingRecipe.Id);
-        if (updatedRecipe.Value is null)
+        if (!updatedRecipe.Success || updatedRecipe.Value == null)
         {
             return Result.Fail<RecipesResponseDto>("Failed to load updated recipe");
         }
