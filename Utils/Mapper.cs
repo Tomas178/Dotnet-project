@@ -38,7 +38,7 @@ public static class Mapper
                 ? MapToResponseDto(user.CreatedRecipes)
                 : null,
             SavedRecipes = includeRecipes
-                ? MapToResponseDto(user.SavedRecipes.Select(sr => sr.Recipe))
+                ? MapToResponseDto(user.SavedRecipes.Select(sr => sr.Recipe).DistinctBy(r => r.Id))
                 : null
         };
     }

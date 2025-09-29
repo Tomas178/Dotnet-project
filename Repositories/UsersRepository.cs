@@ -45,6 +45,9 @@ public class UsersRepository(ProjectDbContext dbContext) : IUsersRepository
                     .ThenInclude(sr => sr.Recipe)
                         .ThenInclude(r => r.RecipesTools)
                             .ThenInclude(rt => rt.Tool)
+                .Include(u => u.SavedRecipes)
+                    .ThenInclude(sr => sr.Recipe)
+                        .ThenInclude(r => r.User)
                 .FirstOrDefaultAsync(u => u.Id == id);
 
             if (user is null)

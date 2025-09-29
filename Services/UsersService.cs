@@ -32,6 +32,21 @@ public class UsersService(IUsersRepository usersRepository) : IUsersService
             return Result.Fail<UsersResponseDto>(result.Error!);
         }
 
+        Console.WriteLine($"SavedRecipes for user {result.Value!.Id} ({result.Value!.Name}):");
+        foreach (var saved in result.Value.SavedRecipes)
+        {
+            var recipe = saved.Recipe;
+            if (recipe != null)
+            {
+                Console.WriteLine($"  RecipeId={recipe.Id}, Title={recipe.Title}");
+                Console.WriteLine($"  RecipeAuthor: {recipe.User}");
+            }
+            else
+            {
+                Console.WriteLine($"  RecipeId=null (navigation property not loaded)");
+            }
+        }
+
         var user = Mapper.MapToResponseDto(result.Value!, true);
 
         return user;
